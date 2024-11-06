@@ -1,27 +1,47 @@
+let font;  //載入字型文字
+let points = [];  //轉成點狀文字
 let angle=0
-function setup() {
-    createCanvas(windowWidth, windowHeight);
-    background(0)//背景顏色為黑色
-    angleMode(DEGREES)//設定使用到角度，採用數字的方式0-360
-    frameRate(5)//進入draw()函數，每秒10次
-     }
-  
-function draw() {//開始畫圖
-// background(220);
-background(0)
-//translate(width/2,height/2)//設定原點(0，0)的左上角，移到視窗中心(width/2，height/2)
-translate(mouseX,mouseY)//原點在滑鼠
-//視窗中心點畫一個600*600的方形，框限為白色，不填滿顏色
-noFill()//不填滿
-stroke(255)//框線白色
-rectMode(CENTER)//設定方形的中心點為座標點
-for (let i=0;i<33;i=i+1){
-let r =map(sin(frameCount),-1,1,50,255)//對應，sin的質位於-1~1間的位置，對應到200~255間的位置
-let g =map(sin(frameCount/2),-1,1,50,255)//對應
-let b =map(sin(frameCount)/4,-1,1,50,100)//對應
-stroke(r,g,b)
-rotate(sin(angle-i*2)*40)//三角函數sin的質借於-1~1間，旋轉角度介於
-rect(0,0,100+(mouseX/500)-i*3,600-i*3,20)//畫一個方形(600，600)，圓弧在四點寬高為100
+let r =10
+// ==================================================
+function preload(){  //在執行setup()前，必須先做此函數執行，主要先載入字型
+    //為載入在fonts資料夾內的NotoSansTC-VariableFont_Wght.ttf字型
+    font = loadFont("fonts/NotoSansTC-VariableFont_Wght.ttf") 
 }
+//===================================================
+
+
+function setup() {//設定環境
+  createCanvas(windowWidth, windowHeight);
+  angleMode(DEGREES)//設定三角函數的角度用0~360
+  background("#606c38")
+  //===================================================
+  points = font.textToPoints("TKUET", -300,80, 200, {
+    sampleFactor:0.5
+  }); //轉成文字圖檔，放在(0, 200)位置，圖形大小為200，sampleFactor為點數距離大小，直越小代表點數越小
+//===================================================
+}
+
+
+
+function draw() {
+
+background("#606c38")
+textSize(50)
+text(mouseX+":"+mouseY,width/2,height/2)
+
+translate(width/2-300,height/2-120)
+rotate(frameCount*2) 
+for (let i=0; i<points.length-1; i++) {
+  //text(str(i),points[i].x,points[i].y)//在(point[i].x,points[i].y)座標上顯示一個文字\數字
+  fill("#ffb703")//充滿顏色
+  //noStroke()
+  strokeWeight(1)//畫圓得框限粗細
+  ellipse(points[i].x+r*sin(angle+i*10),points[i].y+r*sin(angle+i*10),10)
+  stroke("#fb8500")
+  strokeWeight(5)
+  //line(points[i].x,points[i].y,points[i+1].x,points[i+1].y)//畫線，兩個點構成一條線
+  //畫兩個點第一個點(points[i].x,points[i].y)，第二個點(points[i].x,points[i].y,points[i+1].x,points[i+1].y)
+} 
+//===================================================
 angle=angle+10
 }
